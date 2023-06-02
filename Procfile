@@ -1,0 +1,1 @@
+web: gunicorn mama.wsgi --log-file -
