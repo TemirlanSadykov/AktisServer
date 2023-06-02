@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Clock-In</title>
+</head>
+<body>
+    <h1>Employee Clock-In</h1>
+    <form method="post">
+        {% csrf_token %}
+        <select name="employee" required>
+            <option value="">Select an employee</option>
+            {% for employee in employees %}
+                <option value="{{ employee.id }}">{{ employee.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Clock In</button>
+    </form>
+</body>
+</html>
