@@ -1,1 +1,1 @@
-web: gunicorn mama.wsgi --log-file -
+web: gunicorn 'mama.wsgi'
