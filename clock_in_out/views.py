@@ -1,4 +1,14 @@
 from django.http import JsonResponse
+from django.shortcuts import render
+from django.middleware.csrf import get_token
+from django.http import HttpResponse
+
+def get_csrf_token(request):
+    # Generate a CSRF token
+    csrf_token = get_token(request)
+    
+    # Return the CSRF token as a plain text response
+    return HttpResponse(csrf_token)
 
 def login_view(request):
     if request.method == 'POST':
@@ -13,4 +23,4 @@ def login_view(request):
             
         return JsonResponse(response)
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    return render(request, 'login.html')
