@@ -15,7 +15,7 @@ def login_view(request):
     if request.method == 'POST':
         employee_id = request.POST.get('employee_id')
         password = request.POST.get('password')
-        employee = authenticate(request, employee_id=employee_id, password=password)
+        employee = authenticate(request, username=employee_id, password=password)
 
         if employee is not None:
             response = {'status': 'success', 'message': 'Successful login'}
