@@ -13,19 +13,16 @@ def login_view(request):
     csrf_token = get_token(request)
     
     if request.method == 'POST':
-        form = EmployeeLoginForm(request, data=request.POST)
-        if form.is_valid():
-            employee_id = form.cleaned_data.get('employee_id')
-            password = form.cleaned_data.get('password')
-            employee = authenticate(request, employee_id=employee_id, password=password)
+        employee_id = request.POST.get('employee_id')
+        password = request.POST.get('password')
+        employee = authenticate(request, employee_id=employee_id, password=password)
 
-            if employee is not None:
-                login(request, employee)
-                response = {'status': 'success', 'message': 'Successful login'}
-                return JsonResponse(response)
-            else:
-                response = {'status': 'error', 'message': 'Invalid Credentials'}
-                return JsonResponse(response)
+        if employee is not None:
+            response = {'status': 'success', 'message': 'Successful login'}
+        else:
+            response = {'status': 'error', 'message': 'Invalid Credentials'}
+            
+        return JsonResponse(response)
 
     return HttpResponse(csrf_token)
 
