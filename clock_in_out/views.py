@@ -2,28 +2,39 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.middleware.csrf import get_token
 from django.http import HttpResponse
-
-def get_csrf_token(request):
-    # Generate a CSRF token
-    csrf_token = get_token(request)
-    
-    # Return the CSRF token as a plain text response
-    return HttpResponse(csrf_token)
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from .forms import EmployeeLoginForm
+from .forms import EmployeeForm
 
 def login_view(request):
 
     csrf_token = get_token(request)
-
+    
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        form = EmployeeLoginForm(request, data=request.POST)
+        if form.is_valid():
+            employee_id = form.cleaned_data.get('employee_id')
+            password = form.cleaned_data.get('password')
+            employee = authenticate(request, employee_id=employee_id, password=password)
 
-        # Perform authentication logic here, e.g., check against a database
-        if username == 'admin' and password == 'password':
-            response = {'status': 'success', 'message': 'Login successful'}
-        else:
-            response = {'status': 'error', 'message': 'Invalid credentials'}
-            
-        return JsonResponse(response)
+            if employee is not None:
+                login(request, employee)
+                response = {'status': 'success', 'message': 'Successful login'}
+                return JsonResponse(response)
+            else:
+                response = {'status': 'error', 'message': 'Invalid Credentials'}
+                return JsonResponse(response)
 
     return HttpResponse(csrf_token)
+
+def add_employee(request):
+    if request.method == 'POST':
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_view')
+    else:
+        form = EmployeeForm()
+
+    return render(request, 'add_employee.html', {'form': form})
