@@ -11,6 +11,9 @@ def get_csrf_token(request):
     return HttpResponse(csrf_token)
 
 def login_view(request):
+
+    csrf_token = get_token(request)
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -23,4 +26,4 @@ def login_view(request):
             
         return JsonResponse(response)
 
-    return render(request, 'login.html')
+    return HttpResponse(csrf_token)
