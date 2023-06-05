@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from .forms import EmployeeLoginForm
 from .forms import EmployeeForm
+from django.views.decorators.csrf import csrf_protect
 
 def login_view(request):
 
@@ -28,12 +29,15 @@ def login_view(request):
 
     return HttpResponse(csrf_token)
 
+@csrf_protect
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('admin_view')
+            employee = form.save(commit=False)
+            employee.username = employee.employee_id  # Set employee_id as the username
+            employee.save()
+            return JsonResponse({'status':'success'})  # Replace 'employee_list' with your desired URL after successful addition
     else:
         form = EmployeeForm()
 
