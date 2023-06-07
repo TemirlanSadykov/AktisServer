@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Delete Employee</h1>
-    <p>Are you sure you want to delete employee with ID: {{ employee.employee_id }}?</p>
+    <p>Are you sure you want to delete employee with ID: {{ employee.username }}?</p>
     <form method="POST">
     {% csrf_token %}
     <button type="submit">Delete</button>

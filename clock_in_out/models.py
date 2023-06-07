@@ -1,27 +1,42 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
-class Employee(AbstractUser):
-    username = models.CharField(max_length=150, unique=True)  # Use employee_id as username
-    employee_id = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=128)
+class CustomUserManager(BaseUserManager):
+    def create_user(self, username, password=None, **extra_fields):
+        if not username:
+            raise ValueError("The username field must be set")
+        username = self.model.normalize_username(username)
+        user = self.model(username=username, **extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, username, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(username, password, **extra_fields)
+
+
+class Employee(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField(max_length=150, unique=True)
     clock_in_time = models.DateTimeField(auto_now_add=True)
     clock_out_time = models.DateTimeField(null=True, blank=True)
+    
+    # Additional fields can be added here
 
-    #Specify a unique related_name for the groups field
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='employee_set',  # Change 'employee_set' to your desired related name
-        blank=True,
-    )
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
 
-    # Specify unique related_name arguments for the user_permissions field
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='employee_set',  # Change 'employee_set' to your desired related name
-        blank=True,
-    )
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
+
+    def get_authenticated(self, password):
+        if self.password == password:
+            return True
+        else:
+            return False
 
     def __str__(self):
-        return f'{self.employee_id} - {self.username}'
-    
+        return self.username
