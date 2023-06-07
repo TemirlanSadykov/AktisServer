@@ -15,13 +15,17 @@ def login_view(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        if Employee.objects.get(username=username).get_authenticated(password):
-            # Redirect to a success page
-            response = {'status': 'success', 'message': 'Successful login'}
-        else:
-            # Invalid login credentials, display an error message
+        try: 
+            if Employee.objects.get(username=username).get_authenticated(password):
+                # Redirect to a success page
+                response = {'status': 'success', 'message': 'Successful login'}
+            else:
+                # Invalid login credentials, display an error message
+                response = {'status': 'error', 'message': 'Invalid Credentials'}
+            return JsonResponse(response)
+        except:
             response = {'status': 'error', 'message': 'Invalid Credentials'}
-        return JsonResponse(response)
+            return JsonResponse(response)
 
     return HttpResponse(csrf_token)
 
