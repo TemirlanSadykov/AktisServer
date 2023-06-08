@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from enum import Enum
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -40,3 +41,37 @@ class Employee(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+    
+    def set_clock_in_time(self, clock_in):
+        self.clock_in_time = clock_in
+
+    def set_clock_out_time(self, clock_out):
+        self.clock_out_time = clock_out
+    
+'''
+class Task(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+    
+class TaskSize(Enum):
+    S42 = '42'
+    S44 = '44'
+    S46 = '46'
+    
+class EmployeeTask(models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
+    task = models.ForeignKey('Task', on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    finish_time = models.DateTimeField()
+    sizes = models.CharField(
+        max_length=20,
+        choices=[(tag, tag.value) for tag in TaskSize],
+        default=TaskSize.SMALL.value
+    )
+
+
+    def __str__(self):
+        return f"{self.employee.username} - {self.task.name}"
+'''

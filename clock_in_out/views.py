@@ -6,6 +6,7 @@ from .forms import EmployeeRegistrationForm
 from django.views.decorators.csrf import csrf_protect
 from .models import Employee
 from django.http import HttpResponse
+import datetime
 
 def login_view(request):
 
@@ -40,3 +41,29 @@ def add_employee(request):
         form = EmployeeRegistrationForm()
 
     return render(request, 'add_employee.html', {'form': form})
+
+def clock_in_view(request):
+
+    csrf_token = get_token(request)
+    
+    if request.method == 'POST':
+        username = request.POST['username']
+        employee = Employee.objects.get(username=username)
+        employee.set_clock_in_time(datetime.datetime.now())
+        response = {'status': 'success', 'message': getattr(employee, 'clock_in_time')}
+        return JsonResponse(response)
+        
+    return HttpResponse(csrf_token)
+
+def clock_out_view(request):
+
+    csrf_token = get_token(request)
+    
+    if request.method == 'POST':
+        username = request.POST['username']
+        employee = Employee.objects.get(username=username)
+        employee.set_clock_out_time(datetime.datetime.now())
+        response = {'status': 'success', 'message':  getattr(employee, 'clock_out_time')}
+        return JsonResponse(response)
+        
+    return HttpResponse(csrf_token)
