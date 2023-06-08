@@ -15,20 +15,22 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-
+        employee = Employee.objects.get(username=username)
         try: 
-            if Employee.objects.get(username=username).get_authenticated(password):
+            if employee.get_authenticated(password):
                 # Redirect to a success page
-                response = {'status': 'success', 'message': 'Successful login'}
+                response = {'status': 'success', 
+                            'clock_in_time': getattr(employee, 'clock_in_time'),
+                            'clock_out_time': getattr(employee, 'clock_out_time')}
             else:
                 # Invalid login credentials, display an error message
-                response = {'status': 'error', 'message': 'Invalid Credentials'}
-            return JsonResponse(response)
+                response = {'status': 'error', 'message': 'Invalid Credentials 1'}
         except:
-            response = {'status': 'error', 'message': 'Invalid Credentials'}
-            return JsonResponse(response)
+            response = {'status': 'error', 'message': 'Invalid Credentials 2'}
 
-    return HttpResponse(csrf_token)
+        return JsonResponse(response)
+
+    return render(request, 'login.html')
 
 @csrf_protect
 def add_employee(request):
@@ -50,7 +52,7 @@ def clock_in_view(request):
         username = request.POST['username']
         employee = Employee.objects.get(username=username)
         employee.set_clock_in_time(datetime.datetime.now())
-        response = {'status': 'success', 'message': getattr(employee, 'clock_in_time')}
+        response = {'status': 'success', 'message': getattr(employee, 'clock_in_time').strftime('%H:%M:%S')}
         return JsonResponse(response)
         
     return HttpResponse(csrf_token)
@@ -63,7 +65,7 @@ def clock_out_view(request):
         username = request.POST['username']
         employee = Employee.objects.get(username=username)
         employee.set_clock_out_time(datetime.datetime.now())
-        response = {'status': 'success', 'message':  getattr(employee, 'clock_out_time')}
+        response = {'status': 'success', 'message':  getattr(employee, 'clock_out_time').strftime('%H:%M:%S')}
         return JsonResponse(response)
         
     return HttpResponse(csrf_token)
