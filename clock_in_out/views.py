@@ -30,7 +30,7 @@ def login_view(request):
 
         return JsonResponse(response)
 
-    return render(request, 'login.html')
+    return HttpResponse(csrf_token)
 
 @csrf_protect
 def add_employee(request):
