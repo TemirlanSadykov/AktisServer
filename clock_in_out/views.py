@@ -20,8 +20,8 @@ def login_view(request):
             if employee.get_authenticated(password):
                 # Redirect to a success page
                 response = {'status': 'success', 
-                            'clock_in_time': getattr(employee, 'clock_in_time'),
-                            'clock_out_time': getattr(employee, 'clock_out_time')}
+                            'clock_in_time': getattr(employee, 'clock_in_time').strftime("%H:%M:%S"),
+                            'clock_out_time': getattr(employee, 'clock_out_time').strftime("%H:%M:%S")}
             else:
                 # Invalid login credentials, display an error message
                 response = {'status': 'error', 'message': 'Invalid Credentials 1'}
