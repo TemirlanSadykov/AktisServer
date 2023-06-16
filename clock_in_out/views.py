@@ -69,3 +69,6 @@ def clock_out_view(request):
         return JsonResponse(response)
         
     return HttpResponse(csrf_token)
+
+def admin_view(request):
+    return render(request, 'admin_view.html', {'employees': Employee.objects.all()})

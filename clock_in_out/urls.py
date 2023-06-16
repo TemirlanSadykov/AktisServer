@@ -6,4 +6,5 @@ urlpatterns = [
     path('add_employee/', views.add_employee, name='add_employee'),
     path('clock_in/', views.clock_in_view, name='clock_in'),
     path('clock_out/', views.clock_out_view, name='clock_out'),
+    path('admin_view/', views.admin_view, name='admin_view'),
 ]

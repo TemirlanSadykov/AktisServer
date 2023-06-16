@@ -44,9 +44,11 @@ class Employee(AbstractBaseUser, PermissionsMixin):
     
     def set_clock_in_time(self, clock_in):
         self.clock_in_time = clock_in
+        self.save()
 
     def set_clock_out_time(self, clock_out):
         self.clock_out_time = clock_out
+        self.save()
     
 '''
 class Task(models.Model):
