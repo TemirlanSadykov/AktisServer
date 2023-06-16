@@ -38,7 +38,7 @@ def add_employee(request):
         form = EmployeeRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status':'success'})  # Replace 'employee_list' with your desired URL after successful addition
+            return JsonResponse({'status':'success'})
     else:
         form = EmployeeRegistrationForm()
 

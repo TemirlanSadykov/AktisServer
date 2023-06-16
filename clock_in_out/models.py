@@ -21,7 +21,7 @@ class CustomUserManager(BaseUserManager):
 class Employee(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True)
     clock_in_time = models.DateTimeField(auto_now_add=True)
-    clock_out_time = models.DateTimeField(null=True, blank=True)
+    clock_out_time = models.DateTimeField(auto_now_add=True)
     
     # Additional fields can be added here
 
