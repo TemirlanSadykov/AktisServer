@@ -50,30 +50,25 @@ class Employee(AbstractBaseUser, PermissionsMixin):
         self.clock_out_time = datetime.datetime.now() + datetime.timedelta(hours=6)
         self.save()
     
-'''
+
 class Task(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=128)
 
     def __str__(self):
         return self.name
     
-class TaskSize(Enum):
-    S42 = '42'
-    S44 = '44'
-    S46 = '46'
+class Size(models.Model):
+    size = models.CharField(max_length=4)
+
+    def __str__(self):
+        return self.name
     
 class EmployeeTask(models.Model):
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
     task = models.ForeignKey('Task', on_delete=models.CASCADE)
+    size = models.ForeignKey('Size', on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     finish_time = models.DateTimeField()
-    sizes = models.CharField(
-        max_length=20,
-        choices=[(tag, tag.value) for tag in TaskSize],
-        default=TaskSize.SMALL.value
-    )
-
 
     def __str__(self):
-        return f"{self.employee.username} - {self.task.name}"
-'''
+        return f"{self.employee.username} - {self.task.name} - {self.size.size}"

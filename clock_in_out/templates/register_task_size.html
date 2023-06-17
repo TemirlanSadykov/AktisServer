@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register Task and Size</title>
+</head>
+<body>
+    <h1>Register Task and Size</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ task_form.as_p }}
+        {{ size_form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

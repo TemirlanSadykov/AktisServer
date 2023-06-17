@@ -7,4 +7,5 @@ urlpatterns = [
     path('clock_in/', views.clock_in_view, name='clock_in'),
     path('clock_out/', views.clock_out_view, name='clock_out'),
     path('admin_view/', views.admin_view, name='admin_view'),
+    path('register_task_size/', views.register_task_size_view, name='register_task_size'),
 ]

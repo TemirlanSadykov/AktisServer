@@ -1,6 +1,6 @@
 from django import forms
 from .models import Employee
-from django.contrib.auth.forms import AuthenticationForm
+from .models import Task, Size
 
 class EmployeeLoginForm(forms.Form):
     username = forms.CharField(max_length=150)
@@ -12,4 +12,27 @@ class EmployeeRegistrationForm(forms.ModelForm):
     class Meta:
         model = Employee
         fields = ['username', 'password']
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['name']
+        labels = {
+            'name': 'Task Name'
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'})
+        }
+
+class SizeForm(forms.ModelForm):
+    class Meta:
+        model = Size
+        fields = ['size']
+        labels = {
+            'size': 'Size'
+        }
+        widgets = {
+            'size': forms.TextInput(attrs={'class': 'form-control'})
+        }
+
 
