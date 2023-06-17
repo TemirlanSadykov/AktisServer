@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from enum import Enum
+import datetime
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -42,12 +42,12 @@ class Employee(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
     
-    def set_clock_in_time(self, clock_in):
-        self.clock_in_time = clock_in
+    def set_clock_in_time(self):
+        self.clock_in_time = datetime.datetime.now() + datetime.timedelta(hours=6)
         self.save()
 
-    def set_clock_out_time(self, clock_out):
-        self.clock_out_time = clock_out
+    def set_clock_out_time(self):
+        self.clock_out_time = datetime.datetime.now() + datetime.timedelta(hours=6)
         self.save()
     
 '''
