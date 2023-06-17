@@ -52,16 +52,16 @@ class Employee(AbstractBaseUser, PermissionsMixin):
     
 
 class Task(models.Model):
-    name = models.CharField(max_length=128)
+    task = models.CharField(max_length=128)
 
     def __str__(self):
-        return self.name
+        return self.task
     
 class Size(models.Model):
     size = models.CharField(max_length=4)
 
     def __str__(self):
-        return self.name
+        return self.size
     
 class EmployeeTask(models.Model):
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE)

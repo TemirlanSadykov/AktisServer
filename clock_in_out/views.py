@@ -51,8 +51,10 @@ def clock_in_view(request):
         username = request.POST['username']
         employee = Employee.objects.get(username=username)
         employee.set_clock_in_time()
+        task_values = [item['task'] for item in Task.objects.values('task')]
+        size_values = [item['size'] for item in Size.objects.values('size')]
         response = {'status': 'success', 
-                    'tasks': list(Task.objects.values('name')), 'sizes': list(Size.objects.values('size'))}
+                    'tasks': task_values, 'sizes': size_values}
         return JsonResponse(response)
         
     return HttpResponse(csrf_token)

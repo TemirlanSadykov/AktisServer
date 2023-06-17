@@ -16,12 +16,12 @@ class EmployeeRegistrationForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['name']
+        fields = ['task']
         labels = {
-            'name': 'Task Name'
+            'task': 'Task Name'
         }
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'})
+            'task': forms.TextInput(attrs={'class': 'form-control'})
         }
 
 class SizeForm(forms.ModelForm):
