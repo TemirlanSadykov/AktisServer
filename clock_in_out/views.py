@@ -3,9 +3,9 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render
 from .forms import EmployeeRegistrationForm
 from django.views.decorators.csrf import csrf_protect
-from .models import Employee, Task, Size
+from .models import Employee, Task, Size, EmployeeTask
 from django.http import HttpResponse
-from .forms import TaskForm, SizeForm
+from .forms import TaskForm, SizeForm, StartTaskForm
 
 def login_view(request):
 
@@ -73,7 +73,7 @@ def clock_out_view(request):
     return HttpResponse(csrf_token)
 
 def admin_view(request):
-    return render(request, 'admin_view.html', {'employees': Employee.objects.all()})
+    return render(request, 'admin_view.html', {'employeetasks': EmployeeTask.objects.all()})
 
 def register_task_size_view(request):
     if request.method == 'POST':
@@ -93,3 +93,37 @@ def register_task_size_view(request):
         'size_form': size_form,
     }
     return render(request, 'register_task_size.html', context)
+
+def start_task_test(request):
+    csrf_token = get_token(request)
+
+    if request.method == 'POST':
+        form = StartTaskForm(request.POST)
+        if form.is_valid():
+            task_saver = form.save(commit=False)
+            sizes = []
+            for size_names in form.cleaned_data['sizes']:
+                size = Size.objects.get(size=size_names)
+                sizes.append(size.id)
+            form.cleaned_data['sizes'] = sizes
+            task_saver.save()
+            form.save_m2m()
+            response = {'status' : 'success', 'employee_task_id' : task_saver.id}
+        return JsonResponse(response)
+
+    else:
+        form = StartTaskForm()
+
+    return render(request, 'start_task_test.html', {'form': form})
+
+def finish_task_test(request):
+    csrf_token = get_token(request)
+
+    if request.method == 'POST':
+        employee_task_id = request.POST['employee_task_id']
+        employee_task = EmployeeTask.objects.get(id = employee_task_id)
+        employee_task.set_finish_time()
+        response = {'status' : 'success'}
+        return JsonResponse(response)
+
+    return HttpResponse(csrf_token)

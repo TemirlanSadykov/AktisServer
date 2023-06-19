@@ -1,6 +1,6 @@
 from django import forms
 from .models import Employee
-from .models import Task, Size
+from .models import Task, Size, EmployeeTask
 
 class EmployeeLoginForm(forms.Form):
     username = forms.CharField(max_length=150)
@@ -35,4 +35,13 @@ class SizeForm(forms.ModelForm):
             'size': forms.TextInput(attrs={'class': 'form-control'})
         }
 
+class StartTaskForm(forms.ModelForm):
+    sizes = forms.ModelMultipleChoiceField(
+        queryset=Size.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        to_field_name='size'
+    )
 
+    class Meta:
+        model = EmployeeTask
+        fields = ['employee', 'task', 'sizes']

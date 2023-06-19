@@ -12,16 +12,23 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th>Clock In Time</th>
-          <th>Clock Out Time</th>
+          <th>Task</th>
+          <th>Sizes</th>
+          <th>Start Time</th>
+          <th>Finish Time</th>
         </tr>
       </thead>
       <tbody>
-        {% for employee in employees %}
+        {% for form in employeetasks %}
           <tr>
-            <td>{{ employee.username }}</td>
-            <td>{{ employee.clock_in_time }}</td>
-            <td>{{ employee.clock_out_time }}</td>
+            <td>{{ form.employee.username }}</td>
+            <td>{{ form.task }}</td>
+            <td>
+              {% for size in form.sizes.all %}
+                {{size}}
+              {% endfor %}</td>
+            <td>{{ form.start_time }}</td>
+            <td>{{ form.finish_time }}</td>
           </tr>
         {% endfor %}
       </tbody>
