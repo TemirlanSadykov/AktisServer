@@ -70,7 +70,7 @@ class Size(models.Model):
 class EmployeeTask(models.Model):
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
     task = models.ForeignKey('Task', on_delete=models.CASCADE)
-    start_time = models.DateTimeField(auto_now_add=True)
+    start_time = models.DateTimeField(null=True)
     finish_time = models.DateTimeField(null=True)
 
     def __str__(self):

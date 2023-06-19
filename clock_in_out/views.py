@@ -5,7 +5,8 @@ from .forms import EmployeeRegistrationForm
 from django.views.decorators.csrf import csrf_protect
 from .models import Employee, Task, Size, EmployeeTask
 from django.http import HttpResponse
-from .forms import TaskForm, SizeForm, StartTaskForm
+from .forms import TaskForm, SizeForm
+import datetime
 
 def login_view(request):
 
@@ -100,14 +101,14 @@ def start_task(request):
         task = request.POST['task']
         employee = Employee.objects.get(username=username)
         task = Task.objects.get(task=task)
-        employee_task = EmployeeTask(employee=employee, task=task)
+        employee_task = EmployeeTask(employee=employee, task=task, start_time = datetime.datetime.now() + datetime.timedelta(hours=6))
         employee_task.save()
         response = {'status' : 'success', 'employee_task_id' : employee_task.id}
         return JsonResponse(response)
 
     return HttpResponse(csrf_token)
 
-def finish_task_test(request):
+def finish_task(request):
     csrf_token = get_token(request)
 
     if request.method == 'POST':
