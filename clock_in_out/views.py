@@ -94,7 +94,7 @@ def register_task_size_view(request):
     }
     return render(request, 'register_task_size.html', context)
 
-def start_task_test(request):
+def start_task(request):
     csrf_token = get_token(request)
 
     if request.method == 'POST':
