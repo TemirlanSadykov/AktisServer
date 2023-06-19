@@ -111,10 +111,7 @@ def start_task_test(request):
             response = {'status' : 'success', 'employee_task_id' : task_saver.id}
         return JsonResponse(response)
 
-    else:
-        form = StartTaskForm()
-
-    return render(request, 'start_task_test.html', {'form': form})
+    return HttpResponse(csrf_token)
 
 def finish_task_test(request):
     csrf_token = get_token(request)
