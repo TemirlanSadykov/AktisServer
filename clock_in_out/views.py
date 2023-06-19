@@ -52,9 +52,7 @@ def clock_in_view(request):
         employee = Employee.objects.get(username=username)
         employee.set_clock_in_time()
         task_values = [item['task'] for item in Task.objects.values('task')]
-        size_values = [item['size'] for item in Size.objects.values('size')]
-        response = {'status': 'success', 
-                    'tasks': task_values, 'sizes': size_values}
+        response = {'status': 'success', 'tasks': task_values}
         return JsonResponse(response)
         
     return HttpResponse(csrf_token)
@@ -98,17 +96,13 @@ def start_task(request):
     csrf_token = get_token(request)
 
     if request.method == 'POST':
-        form = StartTaskForm(request.POST)
-        if form.is_valid():
-            task_saver = form.save(commit=False)
-            sizes = []
-            for size_names in form.cleaned_data['sizes']:
-                size = Size.objects.get(size=size_names)
-                sizes.append(size.id)
-            form.cleaned_data['sizes'] = sizes
-            task_saver.save()
-            form.save_m2m()
-            response = {'status' : 'success', 'employee_task_id' : task_saver.id}
+        username = request.POST['employee']
+        task = request.POST['task']
+        employee = Employee.objects.get(username=username)
+        task = Task.objects.get(task=task)
+        employee_task = EmployeeTask(employee=employee, task=task)
+        employee_task.save()
+        response = {'status' : 'success', 'employee_task_id' : employee_task.id}
         return JsonResponse(response)
 
     return HttpResponse(csrf_token)

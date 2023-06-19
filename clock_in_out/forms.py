@@ -36,12 +36,9 @@ class SizeForm(forms.ModelForm):
         }
 
 class StartTaskForm(forms.ModelForm):
-    sizes = forms.ModelMultipleChoiceField(
-        queryset=Size.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
-        to_field_name='size'
-    )
+    employee = forms.ModelChoiceField(queryset=Employee.objects.all(), empty_label=None, to_field_name='username')
+    task = forms.ModelChoiceField(queryset=Task.objects.all(), empty_label=None, to_field_name='task')
 
     class Meta:
         model = EmployeeTask
-        fields = ['employee', 'task', 'sizes']
+        fields = ['employee', 'task']

@@ -70,13 +70,12 @@ class Size(models.Model):
 class EmployeeTask(models.Model):
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
     task = models.ForeignKey('Task', on_delete=models.CASCADE)
-    sizes = models.ManyToManyField('Size')
     start_time = models.DateTimeField(auto_now_add=True)
     finish_time = models.DateTimeField(null=True)
 
     def __str__(self):
         return f"{self.employee.username} - {self.task.task} - {', '.join(str(size) for size in self.sizes.all())}"
-    
+
     def set_finish_time(self):
         self.finish_time = datetime.datetime.now() + datetime.timedelta(hours=6)
         self.save()
