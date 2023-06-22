@@ -16,13 +16,14 @@ def login_view(request):
         username = request.POST['username']
         password = request.POST['password']
         employee = Employee.objects.get(username=username)
+        task_values = [item['task'] for item in Task.objects.values('task')]
         try: 
             if employee.get_authenticated(password):
                 # Redirect to a success page
                 response = {'status': 'success', 'working_task':  getattr(employee, 'working_task'),
                             'clock_in_time': getattr(employee, 'clock_in_time').strftime("%H:%M:%S"),
                             'clock_out_time': getattr(employee, 'clock_out_time').strftime("%H:%M:%S"),
-                            'is_active': getattr(employee, 'is_active')}
+                            'is_active': getattr(employee, 'is_active'), 'tasks':task_values}
             else:
                 # Invalid login credentials, display an error message
                 response = {'status': 'error', 'message': 'Invalid Credentials 1'}
