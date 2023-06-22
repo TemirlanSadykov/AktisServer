@@ -3,9 +3,9 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render
 from .forms import EmployeeRegistrationForm
 from django.views.decorators.csrf import csrf_protect
-from .models import Employee, Task, Size, EmployeeTask
+from .models import Employee, Task, EmployeeTask
 from django.http import HttpResponse
-from .forms import TaskForm, SizeForm
+from .forms import TaskForm, StartTaskForm
 import datetime
 
 def login_view(request):
@@ -19,9 +19,10 @@ def login_view(request):
         try: 
             if employee.get_authenticated(password):
                 # Redirect to a success page
-                response = {'status': 'success', 
+                response = {'status': 'success', 'working_task':  getattr(employee, 'working_task'),
                             'clock_in_time': getattr(employee, 'clock_in_time').strftime("%H:%M:%S"),
-                            'clock_out_time': getattr(employee, 'clock_out_time').strftime("%H:%M:%S")}
+                            'clock_out_time': getattr(employee, 'clock_out_time').strftime("%H:%M:%S"),
+                            'is_active': getattr(employee, 'is_active')}
             else:
                 # Invalid login credentials, display an error message
                 response = {'status': 'error', 'message': 'Invalid Credentials 1'}
@@ -74,22 +75,18 @@ def clock_out_view(request):
 def admin_view(request):
     return render(request, 'admin_view.html', {'employeetasks': EmployeeTask.objects.all()})
 
-def register_task_size_view(request):
+def register_task(request):
     if request.method == 'POST':
         task_form = TaskForm(request.POST)
-        size_form = SizeForm(request.POST)
         
-        if task_form.is_valid() and size_form.is_valid():
+        if task_form.is_valid():
             task_form.save()
-            size_form.save()
             return JsonResponse({'status': 'success'})
     else:
         task_form = TaskForm()
-        size_form = SizeForm()
     
     context = {
         'task_form': task_form,
-        'size_form': size_form,
     }
     return render(request, 'register_task_size.html', context)
 
@@ -100,9 +97,10 @@ def start_task(request):
         username = request.POST['employee']
         task = request.POST['task']
         employee = Employee.objects.get(username=username)
-        task = Task.objects.get(task=task)
-        employee_task = EmployeeTask(employee=employee, task=task, start_time = datetime.datetime.now() + datetime.timedelta(hours=6))
+        task_to_save = Task.objects.get(task=task)
+        employee_task = EmployeeTask(employee=employee, task=task_to_save, start_time = datetime.datetime.now() + datetime.timedelta(hours=6))
         employee_task.save()
+        employee.set_working_task(task)
         response = {'status' : 'success', 'employee_task_id' : employee_task.id}
         return JsonResponse(response)
 
@@ -116,6 +114,8 @@ def finish_task(request):
         employee_task = EmployeeTask.objects.get(id = employee_task_id)
         employee_task.set_finish_time()
         response = {'status' : 'success'}
+        employee = Employee.objects.get(id = employee_task.employee.id)
+        employee.reset_working_task()
         return JsonResponse(response)
 
     return HttpResponse(csrf_token)

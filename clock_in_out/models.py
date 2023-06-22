@@ -22,10 +22,11 @@ class Employee(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True)
     clock_in_time = models.DateTimeField(auto_now_add=True)
     clock_out_time = models.DateTimeField(auto_now_add=True)
-    
+    working_task = models.CharField(max_length=150, default=None, null=True)
+
     # Additional fields can be added here
 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'username'
@@ -44,10 +45,20 @@ class Employee(AbstractBaseUser, PermissionsMixin):
     
     def set_clock_in_time(self):
         self.clock_in_time = datetime.datetime.now() + datetime.timedelta(hours=6)
+        self.is_active = True
         self.save()
 
     def set_clock_out_time(self):
         self.clock_out_time = datetime.datetime.now() + datetime.timedelta(hours=6)
+        self.is_active = False
+        self.save()
+
+    def set_working_task(self, task):
+        self.working_task = task
+        self.save()
+
+    def reset_working_task(self):
+        self.working_task = None
         self.save()
     
 
@@ -56,16 +67,6 @@ class Task(models.Model):
 
     def __str__(self):
         return self.task
-    
-class Size(models.Model):
-    size = models.CharField(max_length=4)
-
-    def __str__(self):
-        return self.size
-    
-    @property
-    def id(self):
-        return self.id
     
 class EmployeeTask(models.Model):
     employee = models.ForeignKey('Employee', on_delete=models.CASCADE)

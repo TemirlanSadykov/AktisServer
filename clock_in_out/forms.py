@@ -1,6 +1,6 @@
 from django import forms
 from .models import Employee
-from .models import Task, Size, EmployeeTask
+from .models import Task, EmployeeTask
 
 class EmployeeLoginForm(forms.Form):
     username = forms.CharField(max_length=150)
@@ -22,17 +22,6 @@ class TaskForm(forms.ModelForm):
         }
         widgets = {
             'task': forms.TextInput(attrs={'class': 'form-control'})
-        }
-
-class SizeForm(forms.ModelForm):
-    class Meta:
-        model = Size
-        fields = ['size']
-        labels = {
-            'size': 'Size'
-        }
-        widgets = {
-            'size': forms.TextInput(attrs={'class': 'form-control'})
         }
 
 class StartTaskForm(forms.ModelForm):
