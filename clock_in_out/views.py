@@ -100,7 +100,7 @@ def start_task(request):
         task_to_save = Task.objects.get(task=task)
         employee_task = EmployeeTask(employee=employee, task=task_to_save, start_time = datetime.datetime.now() + datetime.timedelta(hours=6))
         employee_task.save()
-        employee.set_working_task(task)
+        #employee.set_working_task(task)
         response = {'status' : 'success', 'employee_task_id' : employee_task.id}
         return JsonResponse(response)
 
