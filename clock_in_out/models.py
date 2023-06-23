@@ -23,6 +23,7 @@ class Employee(AbstractBaseUser, PermissionsMixin):
     clock_in_time = models.DateTimeField(auto_now_add=True)
     clock_out_time = models.DateTimeField(auto_now_add=True)
     working_task = models.CharField(max_length=150, default=None, null=True)
+    name = models.CharField(max_length=150, default=None, null=True)
 
     # Additional fields can be added here
 

@@ -8,6 +8,9 @@ from django.http import HttpResponse
 from .forms import TaskForm, StartTaskForm
 import datetime
 
+def main(request):
+    return render(request, 'main.html')
+
 def login_view(request):
 
     csrf_token = get_token(request)
@@ -23,7 +26,7 @@ def login_view(request):
                 response = {'status': 'success', 'working_task':  getattr(employee, 'working_task'),
                             'clock_in_time': getattr(employee, 'clock_in_time').strftime("%H:%M:%S"),
                             'clock_out_time': getattr(employee, 'clock_out_time').strftime("%H:%M:%S"),
-                            'is_active': getattr(employee, 'is_active'), 'tasks':task_values}
+                            'is_active': getattr(employee, 'is_active'), 'tasks': task_values}
             else:
                 # Invalid login credentials, display an error message
                 response = {'status': 'error', 'message': 'Invalid Credentials 1'}
@@ -74,7 +77,13 @@ def clock_out_view(request):
     return HttpResponse(csrf_token)
 
 def admin_view(request):
-    return render(request, 'admin_view.html', {'employeetasks': EmployeeTask.objects.all()})
+    return render(request, 'admin_view.html', {'employees': Employee.objects.all()})
+
+def employee_info(request, arg):
+    employee = Employee.objects.get(id=arg)
+    employee_tasks = [item for item in EmployeeTask.objects.filter(employee=employee)]
+    return render(request, 'employee_info.html', {'employee_tasks': employee_tasks,
+                                                  'employee': employee})
 
 def register_task(request):
     if request.method == 'POST':

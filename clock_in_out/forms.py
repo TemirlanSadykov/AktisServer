@@ -11,14 +11,19 @@ class EmployeeRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = Employee
-        fields = ['username', 'password']
+        fields = ['name', 'username', 'password']
+        labels = {
+            'name': 'Имя',
+            'username': 'ID',
+            'password': 'Пароль'
+        }
 
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['task']
         labels = {
-            'task': 'Task Name'
+            'task': 'Название задачи'
         }
         widgets = {
             'task': forms.TextInput(attrs={'class': 'form-control'})

@@ -14,6 +14,14 @@
             text-align: center;
         }
         
+        h3 {
+            text-align: center;
+        }
+        
+        h4 {
+            text-align: center;
+        }
+        
         table {
             margin: 0 auto;
             border-collapse: collapse;
@@ -38,31 +46,26 @@
         tr:hover {
             background-color: #ddd;
         }
-        
-        a {
-            text-decoration: none;
-            color: blue;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
-    <h1>Все работники</h1>
+    <h1>{{ employee.username }} - {{ employee.name }}</h1>
+    <h4>Приступил к работе: {{ employee.clock_in_time|time:"H:i" }}</h4>
+    <h4>Закончил работу: {{ employee.clock_out_time|time:"H:i" }}</h4>
     <table>
         <thead>
             <tr>
-                <th>Имя</th>
-                <th>ID</th>
+                <th>Задачи</th>
+                <th>Начало</th>
+                <th>Завершение</th>
             </tr>
         </thead>
         <tbody>
-            {% for employee in employees %}
+            {% for employee_task in employee_tasks %}
             <tr>
-                <td>{{ employee.name }}</td>
-                <td><a href="{% url 'employee_info' arg=employee.id %}">{{ employee.username }}</a></td>
+                <td>{{ employee_task.task.task }}</td>
+                <td>{{ employee_task.start_time|time:"H:i" }}</td>
+                <td>{{ employee_task.finish_time|time:"H:i" }}</td>
             </tr>
             {% endfor %}
         </tbody>

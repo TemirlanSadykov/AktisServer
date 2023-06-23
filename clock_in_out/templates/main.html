@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Links</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: flex-start;
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+
+        .nav-box {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .nav-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            text-align: left;
+        }
+
+        .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-item a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background-color: #555;
+            transition: background-color 0.3s;
+        }
+
+        .nav-item a:hover {
+            background-color: #777;
+        }
+    </style>
+</head>
+<body>
+    <h1>Навигация</h1>
+    <div class="container">
+        <div class="nav-box">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="{% url 'add_employee' %}">Добавить работника</a></li>
+                <li class="nav-item"><a href="{% url 'register_task' %}">Зарегистрировать новую задачу</a></li>
+                <li class="nav-item"><a href="{% url 'admin_view' %}">Просмотреть всех работников</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
