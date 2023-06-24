@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.middleware.csrf import get_token
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from .forms import EmployeeRegistrationForm
 from django.views.decorators.csrf import csrf_protect
 from .models import Employee, Task, EmployeeTask
@@ -81,7 +81,7 @@ def admin_view(request):
 
 def employee_info(request, arg):
     employee = Employee.objects.get(id=arg)
-    employee_tasks = [item for item in EmployeeTask.objects.filter(employee=employee)]
+    employee_tasks = EmployeeTask.objects.filter(employee=employee)
     return render(request, 'employee_info.html', {'employee_tasks': employee_tasks,
                                                   'employee': employee})
 
@@ -129,3 +129,24 @@ def finish_task(request):
         return JsonResponse(response)
 
     return HttpResponse(csrf_token)
+
+def delete_employee(request, pk):
+    employee = Employee.objects.get(pk=pk)
+    if request.method == 'POST':
+        employee.delete()
+        return JsonResponse({'status' : 'success'})
+    
+    return redirect('admin_view')
+    
+def edit_employee(request, pk):
+    employee = get_object_or_404(Employee, pk=pk)
+
+    if request.method == 'POST':
+        form = EmployeeRegistrationForm(request.POST, instance=employee)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'status' : 'success'})
+    else:
+        form = EmployeeRegistrationForm(instance=employee)
+
+    return render(request, 'edit_employee.html', {'form': form})

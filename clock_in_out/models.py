@@ -81,4 +81,3 @@ class EmployeeTask(models.Model):
     def set_finish_time(self):
         self.finish_time = datetime.datetime.now() + datetime.timedelta(hours=6)
         self.save()
-

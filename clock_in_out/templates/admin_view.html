@@ -56,13 +56,30 @@
             <tr>
                 <th>Имя</th>
                 <th>ID</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
             {% for employee in employees %}
             <tr>
-                <td>{{ employee.name }}</td>
-                <td><a href="{% url 'employee_info' arg=employee.id %}">{{ employee.username }}</a></td>
+                <td><a href="{% url 'employee_info' arg=employee.id %}">{{ employee.name }}</a></td>
+                <td>{{ employee.username }}</td>
+                <td>
+                    <form id="deleteForm{{employee.pk}}" method="post" action="{% url 'delete_employee' employee.pk %}" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="pk" value="{{ employee.pk }}">
+                        <a href="#" onclick="confirmAndSubmit();">Delete</a>
+                    </form>
+                    <script>
+                        function confirmAndSubmit() {
+                            if (confirm('Вы уверены, что хотите удалить этого сотрудника? Данное действие нельзя отменить.')) {
+                                document.getElementById('deleteForm{{employee.pk}}').submit();
+                            }
+                            return false;
+                        }
+                    </script>
+                    <a href="{% url 'edit_employee' employee.pk %}">Edit</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
