@@ -3,13 +3,15 @@ from django.middleware.csrf import get_token
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import EmployeeRegistrationForm
 from django.views.decorators.csrf import csrf_protect
-from .models import Employee, Task, EmployeeTask
+from .models import Employee, Task, EmployeeTask, EmployeeDayResult
 from django.http import HttpResponse
-from .forms import TaskForm, StartTaskForm
+from .forms import TaskForm
 import datetime
+from .scheduler import start_scheduler
 
 def main(request):
-    return render(request, 'main.html')
+    start_scheduler()
+    return render(request, 'main.html', {'day': datetime.date.today()})
 
 def login_view(request):
 
@@ -150,3 +152,10 @@ def edit_employee(request, pk):
         form = EmployeeRegistrationForm(instance=employee)
 
     return render(request, 'edit_employee.html', {'form': form})
+
+def daily_report(request):
+
+    if request.method == 'POST':
+        date = request.POST['date']
+        date_obj = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        return render(request, 'daily_report.html', {'daily_report': EmployeeDayResult.objects.filter(day = date_obj)})

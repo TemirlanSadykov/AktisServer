@@ -65,6 +65,14 @@
                 <li class="nav-item"><a href="{% url 'add_employee' %}">Добавить работника</a></li>
                 <li class="nav-item"><a href="{% url 'register_task' %}">Зарегистрировать новую задачу</a></li>
                 <li class="nav-item"><a href="{% url 'admin_view' %}">Просмотреть всех работников</a></li>
+                <li class="nav-item">
+                    <form action="{% url 'daily_report' %}" method="post">
+                        {% csrf_token %}
+                        <label for="date">Дневной отчет:</label>
+                        <input type="date" id="date" name="date" value="{{ day }}">
+                        <button type="submit">Go</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>

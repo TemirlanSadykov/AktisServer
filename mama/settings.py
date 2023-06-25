@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'clock_in_out',
+    'django_apscheduler',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,9 +81,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': 'Y560nsUIZof9hYiKHuZ0',
-        'HOST': 'containers-us-west-15.railway.app',
-        'PORT': '5547',
+        'PASSWORD': 'eoBrlxccU9HR0RG6ZgqE',
+        'HOST': 'containers-us-west-128.railway.app',
+        'PORT': '6261',
     }
 }
 

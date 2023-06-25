@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Daily Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +11,7 @@
             text-align: center;
         }
         
-        h3 {
+        h2 {
             text-align: center;
         }
         
@@ -49,23 +46,26 @@
     </style>
 </head>
 <body>
-    <h1>{{ employee.username }} - {{ employee.name }}</h1>
-    <h4>Приступил к работе: {{ employee.clock_in_time|time:"H:i:s" }}</h4>
-    <h4>Закончил работу: {{ employee.clock_out_time|time:"H:i:s" }}</h4>
+    <h1>Daily Report</h1>
+    <h2>Date: {{ daily_report.0.day }}</h2>
     <table>
         <thead>
             <tr>
-                <th>Задачи</th>
-                <th>Начало</th>
-                <th>Завершение</th>
+                <th>Employee</th>
+                <th>Working Hours</th>
+                <th>Resting Hours</th>
+                <th>Clock In Time</th>
+                <th>Clock Out Time</th>
             </tr>
         </thead>
         <tbody>
-            {% for employee_task in employee_tasks %}
+            {% for report in daily_report %}
             <tr>
-                <td>{{ employee_task.task.task }}</td>
-                <td>{{ employee_task.start_time|time:"H:i:s" }}</td>
-                <td>{{ employee_task.finish_time|time:"H:i:s" }}</td>
+                <td>{{ report.employee.username }}</td>
+                <td>{{ report.working_hours }}</td>
+                <td>{{ report.resting_hours }}</td>
+                <td>{{ report.clock_in_time }}</td>
+                <td>{{ report.clock_out_time }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -20,8 +20,8 @@ class CustomUserManager(BaseUserManager):
 
 class Employee(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=150, unique=True)
-    clock_in_time = models.DateTimeField(auto_now_add=True)
-    clock_out_time = models.DateTimeField(auto_now_add=True)
+    clock_in_time = models.DateTimeField(default=datetime.datetime(2020, 3, 1, 0, 0))
+    clock_out_time = models.DateTimeField(default=datetime.datetime(2020, 3, 1, 0, 0))
     working_task = models.CharField(max_length=150, default=None, null=True)
     name = models.CharField(max_length=150, default=None, null=True)
 
@@ -76,8 +76,19 @@ class EmployeeTask(models.Model):
     finish_time = models.DateTimeField(null=True)
 
     def __str__(self):
-        return f"{self.employee.username} - {self.task.task} - {', '.join(str(size) for size in self.sizes.all())}"
+        return f"{self.employee.username} - {self.task.task}"
 
     def set_finish_time(self):
         self.finish_time = datetime.datetime.now() + datetime.timedelta(hours=6)
         self.save()
+
+class EmployeeDayResult(models.Model):
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE)
+    day = models.DateField(null=True)
+    working_hours = models.IntegerField(null=True)
+    resting_hours = models.IntegerField(null=True)
+    clock_in_time = models.DateTimeField(null=True)
+    clock_out_time = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return f"{self.day} - {self.employee.username}"
