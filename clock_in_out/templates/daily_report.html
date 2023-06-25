@@ -64,8 +64,8 @@
                 <td>{{ report.employee.username }} - {{ report.employee.name }}</td>
                 <td>{{ report.working_hours }}</td>
                 <td>{{ report.resting_hours }}</td>
-                <td>{{ report.clock_in_time }}</td>
-                <td>{{ report.clock_out_time }}</td>
+                <td>{{ report.clock_in_time|time:"H:i:s"  }}</td>
+                <td>{{ report.clock_out_time|time:"H:i:s"  }}</td>
             </tr>
             {% endfor %}
         </tbody>

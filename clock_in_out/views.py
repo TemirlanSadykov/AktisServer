@@ -73,7 +73,7 @@ def clock_out_view(request):
         username = request.POST['username']
         employee = Employee.objects.get(username=username)
         employee.set_clock_out_time()
-        response = {'status': 'success', 'message':  getattr(employee, 'clock_out_time').strftime('%H:%M:%S')}
+        response = {'status': 'success'}
         return JsonResponse(response)
         
     return HttpResponse(csrf_token)

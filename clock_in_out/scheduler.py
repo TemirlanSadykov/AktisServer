@@ -9,7 +9,7 @@ def save_employee_day_result():
     # Get the current date and time in UTC +6
     now = timezone.now() + timezone.timedelta(hours=6)
 
-    if now.hour == 11 and now.minute == 58:
+    if now.hour == 18 and now.minute == 5:
         employee_day_result = EmployeeDayResult()
         employee_day_result.day = datetime.date.today()
         for id in Employee.objects.values_list('id', flat=True):
@@ -35,5 +35,5 @@ def save_employee_day_result():
 def start_scheduler():
     scheduler = BackgroundScheduler()
     scheduler.add_jobstore(DjangoJobStore(), "default")
-    scheduler.add_job(save_employee_day_result, 'cron', hour=11, minute=58)
+    scheduler.add_job(save_employee_day_result, 'cron', hour=18, minute=5)
     scheduler.start()
