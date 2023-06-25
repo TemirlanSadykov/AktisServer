@@ -46,22 +46,22 @@
     </style>
 </head>
 <body>
-    <h1>Daily Report</h1>
-    <h2>Date: {{ daily_report.0.day }}</h2>
+    <h1>Дневной отчет</h1>
+    <h2>Дата: {{ daily_report.0.day }}</h2>
     <table>
         <thead>
             <tr>
-                <th>Employee</th>
-                <th>Working Hours</th>
-                <th>Resting Hours</th>
-                <th>Clock In Time</th>
-                <th>Clock Out Time</th>
+                <th>Работник</th>
+                <th>Рабочие часы</th>
+                <th>Часы отдыха</th>
+                <th>Начало работы</th>
+                <th>Конец работы</th>
             </tr>
         </thead>
         <tbody>
             {% for report in daily_report %}
             <tr>
-                <td>{{ report.employee.username }}</td>
+                <td>{{ report.employee.username }} - {{ report.employee.name }}</td>
                 <td>{{ report.working_hours }}</td>
                 <td>{{ report.resting_hours }}</td>
                 <td>{{ report.clock_in_time }}</td>
