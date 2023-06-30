@@ -62,7 +62,7 @@
         <tbody>
             {% for employee in employees %}
             <tr>
-                <td><a href="{% url 'employee_info' arg=employee.id %}">{{ employee.name }}</a></td>
+                <td>{{ employee.name }}</td>
                 <td>{{ employee.username }}</td>
                 <td>
                     <form id="deleteForm{{employee.pk}}" method="post" action="{% url 'delete_employee' employee.pk %}" style="display: inline;">

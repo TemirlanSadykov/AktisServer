@@ -5,12 +5,10 @@ from .forms import EmployeeRegistrationForm
 from django.views.decorators.csrf import csrf_protect
 from .models import Employee, Task, EmployeeTask, EmployeeDayResult
 from django.http import HttpResponse
-from .forms import TaskForm
+from .forms import TaskForm, StartTaskForm
 import datetime
-from .scheduler import start_scheduler
 
 def main(request):
-    start_scheduler()
     return render(request, 'main.html', {'day': datetime.date.today()})
 
 def login_view(request):
@@ -73,6 +71,28 @@ def clock_out_view(request):
         username = request.POST['username']
         employee = Employee.objects.get(username=username)
         employee.set_clock_out_time()
+
+        daily_report = EmployeeDayResult()
+        daily_report.employee = Employee.objects.get(username = username)
+        daily_report.day = datetime.datetime.today()
+        daily_report.clock_in_time = getattr(employee, 'clock_in_time')
+        daily_report.clock_out_time = getattr(employee, 'clock_out_time')
+
+        working_hours = 0
+        date_obj = datetime.datetime.today()
+        time_difference = 0
+        try:
+            for employee_task in EmployeeTask.objects.filter(employee=employee, day=date_obj):
+                time_difference = employee_task.finish_time - employee_task.start_time
+                working_hours = int(datetime.timedelta.total_seconds(time_difference)) + working_hours
+        except EmployeeTask.DoesNotExist:
+            working_hours = 0
+        time_difference = employee.clock_out_time.replace(tzinfo=None) - employee.clock_in_time.replace(tzinfo=None)
+        resting_hours = int(datetime.timedelta.total_seconds(time_difference)) - working_hours
+        daily_report.working_hours = working_hours
+        daily_report.resting_hours = resting_hours
+        daily_report.save()
+
         response = {'status': 'success'}
         return JsonResponse(response)
         
@@ -82,10 +102,27 @@ def admin_view(request):
     return render(request, 'admin_view.html', {'employees': Employee.objects.all()})
 
 def employee_info(request, arg):
-    employee = Employee.objects.get(id=arg)
-    employee_tasks = EmployeeTask.objects.filter(employee=employee)
-    return render(request, 'employee_info.html', {'employee_tasks': employee_tasks,
-                                                  'employee': employee})
+    if request.method == 'POST':
+        day = request.POST['day']
+        employee = Employee.objects.get(id=arg)
+        employee_tasks = EmployeeTask.objects.filter(employee=employee, day = day)
+        try:
+            daily_report = EmployeeDayResult.objects.get(employee=employee, day = day)
+        except:
+            daily_report = None
+        return render(request, 'employee_info.html', {'employee_tasks': employee_tasks, 'daily_report': daily_report,
+                                                      'employee': employee, 'day': day})
+    else:
+        day = datetime.datetime.today()
+        formatted_date = day.strftime("%Y-%m-%d")
+        employee = Employee.objects.get(id=arg)
+        employee_tasks = EmployeeTask.objects.filter(employee=employee, day = day)
+        try:
+            daily_report = EmployeeDayResult.objects.get(employee=employee, day = day)
+        except:
+            daily_report = None
+        return render(request, 'employee_info.html', {'employee_tasks': employee_tasks, 'daily_report': daily_report,
+                                                      'employee': employee, 'day': formatted_date})
 
 def register_task(request):
     if request.method == 'POST':
@@ -110,7 +147,9 @@ def start_task(request):
         task = request.POST['task']
         employee = Employee.objects.get(username=username)
         task_to_save = Task.objects.get(task=task)
-        employee_task = EmployeeTask(employee=employee, task=task_to_save, start_time = datetime.datetime.now() + datetime.timedelta(hours=6))
+        employee_task = EmployeeTask(employee=employee, task=task_to_save, 
+                                     start_time = datetime.datetime.now() + datetime.timedelta(hours=6), 
+                                     day = datetime.datetime.now() + datetime.timedelta(hours=6))
         employee_task.save()
         employee.set_working_task(task)
         response = {'status' : 'success', 'employee_task_id' : employee_task.id}
@@ -154,7 +193,6 @@ def edit_employee(request, pk):
     return render(request, 'edit_employee.html', {'form': form})
 
 def daily_report(request):
-
     if request.method == 'POST':
         date = request.POST['date']
         date_obj = datetime.datetime.strptime(date, '%Y-%m-%d').date()

@@ -1,3 +1,4 @@
+{% load custom_filters %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,8 +53,8 @@
         <thead>
             <tr>
                 <th>Работник</th>
-                <th>Рабочие часы</th>
-                <th>Часы отдыха</th>
+                <th>Время работы (ч:м:с)</th>
+                <th>Время отдыха (ч:м:с)</th>
                 <th>Начало работы</th>
                 <th>Конец работы</th>
             </tr>
@@ -61,9 +62,9 @@
         <tbody>
             {% for report in daily_report %}
             <tr>
-                <td>{{ report.employee.username }} - {{ report.employee.name }}</td>
-                <td>{{ report.working_hours }}</td>
-                <td>{{ report.resting_hours }}</td>
+                <td><a href="{% url 'employee_info' report.employee.pk %}">{{ report.employee.username }} - {{ report.employee.name }}</a></td>
+                <td>{{ report.working_hours|duration_format }}</td>
+                <td>{{ report.resting_hours|duration_format }}</td>
                 <td>{{ report.clock_in_time|time:"H:i:s"  }}</td>
                 <td>{{ report.clock_out_time|time:"H:i:s"  }}</td>
             </tr>

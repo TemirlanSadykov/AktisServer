@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'clock_in_out',
+    'clock_in_out.templatetags',
     'django_apscheduler',
     'django.contrib.admin',
     'django.contrib.auth',

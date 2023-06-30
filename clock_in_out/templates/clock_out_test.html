@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clock In</title>
+</head>
+<body>
+    <h1>Clock In</h1>
+    <form method="post" action="{% url 'clock_out' %}">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Clock In</button>
+    </form>
+</body>
+</html>

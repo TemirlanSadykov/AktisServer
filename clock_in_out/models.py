@@ -74,6 +74,7 @@ class EmployeeTask(models.Model):
     task = models.ForeignKey('Task', on_delete=models.CASCADE)
     start_time = models.DateTimeField(null=True)
     finish_time = models.DateTimeField(null=True)
+    day = models.DateField(null=True)
 
     def __str__(self):
         return f"{self.employee.username} - {self.task.task}"

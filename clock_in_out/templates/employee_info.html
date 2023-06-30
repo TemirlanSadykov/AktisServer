@@ -8,22 +8,18 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin-top: 50px;
         }
         
-        h1 {
-            text-align: center;
-        }
-        
-        h3 {
-            text-align: center;
-        }
-        
-        h4 {
+        h1, h4 {
             text-align: center;
         }
         
         table {
-            margin: 0 auto;
             border-collapse: collapse;
             width: 80%;
             margin-bottom: 20px;
@@ -49,9 +45,18 @@
     </style>
 </head>
 <body>
+    <form action="{% url 'employee_info' employee.pk %}" method="post">
+        {% csrf_token %}
+        <label for="day">Дневной отчет:</label>
+        <input type="date" id="day" name="day" value="{{day}}">
+        <button type="submit">Go</button>
+    </form>
+    
+    <h1>Отчет за {{day}}</h1>
     <h1>{{ employee.username }} - {{ employee.name }}</h1>
-    <h4>Приступил к работе: {{ employee.clock_in_time|time:"H:i:s" }}</h4>
-    <h4>Закончил работу: {{ employee.clock_out_time|time:"H:i:s" }}</h4>
+    <h4>Приступил к работе: {{ daily_report.clock_in_time|time:"H:i:s" }} | Закончил работу: {{ daily_report.clock_out_time|time:"H:i:s" }}</h4>
+
+    
     <table>
         <thead>
             <tr>
